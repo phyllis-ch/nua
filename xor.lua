@@ -96,13 +96,18 @@ print("cost = " .. cost(Xor) .. "\n")
 -- print("w6 = " .. Grad.w6)
 -- print("b3 = " .. Grad.b3 .. "\n")
 
-for _ = 1, 1000000 do
+local itr = 150000
+for _ = 1, itr do
    Grad = finite_diff(Xor, eps)
    Xor = train(Xor, Grad, rate)
    print("cost = " .. cost(Xor))
 end
+print("\n")
 
 -- Print result
+print(itr .. " iterations")
+print("---------------------------------")
+print("Xor gate: ")
 for i = 0, 1 do
    for j = 0, 1 do
       print(string.format("%d ^ %d = %f", i, j, forward(Xor, i, j)))
