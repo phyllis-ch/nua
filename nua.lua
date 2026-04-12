@@ -155,17 +155,17 @@ function M.nn.fill(nn, x)
    end
 end
 
-function M.forward(header)
+function M.nn.forward(header)
    local func = header["arr_func"]
    local nn = header["nn"]
 
    for i = 1, #func do
-      nua.mat_dot(nn["a" .. i], nn["a" .. i-1], nn["w" .. i])
-      nua.mat_sum(nn["a" .. i], nn["b" .. i])
+      M.mat.dot(nn["a" .. i], nn["a" .. i-1], nn["w" .. i])
+      M.mat.sum(nn["a" .. i], nn["b" .. i])
       if func[i] == 0 then
          -- skip
       else
-         nua[func[i]](nn["a" .. i])
+         M[func[i]](nn["a" .. i])
       end
    end
 
