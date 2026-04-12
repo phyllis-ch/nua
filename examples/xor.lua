@@ -36,6 +36,7 @@ local function finite_diff(header, eps, ti, to)
    return Grad
 end
 
+-- Apply diffs
 local function learn(header, Grad, rate)
    local nn = header["nn"]
 
@@ -62,21 +63,21 @@ end
 
 -- Main
 
-local ti = {
+local training_input = {
    {0, 0},
    {0, 1},
    {1, 0},
    {1, 1}
 }
 
-local to = {
+local training_output = {
    {0},
    {1},
    {1},
    {0}
 }
 
--- nua.header_create takes in a table of integers
+-- nua.header_create takes in a table of integers, and an optional array of activation functions
 -- Table count will be the layers of neural network 
 -- Each element of the table are amount of neurons in each layer
 -- First element will always be amount of input
@@ -88,21 +89,21 @@ local to = {
 -- 2. array of activation functions
 -- 3. a pointer to the actual neural network
 
--- TODO: maybe an optional table to directly set activation functions
-local header = nua.header_create({2, 2, 1})
+-- Amount of activation functions should always be one less than length of array of layers
+-- As in #func = #layers-1
+local header = nua.header_create({2, 2, 1}, {"sigmoid", "relu"})
 -- To make it less crowded, a variable that points to the neural network can be created
 local Xor = header["nn"]
 nua.nn.randomf(Xor, 0, 1)
 
 -- TODO: A function to interact with the array will probably be better
-header["arr_func"] = { "sigmoid", "relu" }
+-- header["arr_func"] = { "sigmoid", "relu" }
 
-local eps = 1e-3
-local rate = 1e-1
-local epoch = 5000
-local step = 500
-
-train(header, eps, rate, epoch, step, ti, to)
+local eps = 1e-3     -- epsilon (small number)
+local rate = 1e-1    -- learning rate
+local epoch = 5000   -- amount of training
+local step = 500     -- amount of steps before printing out cost
+train(header, eps, rate, epoch, step, training_input, training_output)
 
 -- Print result
 print("---------------------------------")
