@@ -1,3 +1,11 @@
+-- Version 0.1
+-- TODO: Add stuff like save_param and load_param
+-- Add a function to interact with header
+-- make sure order in mat_print and nn_print
+-- restructure submodules (maybe expand to a directory)
+-- Abstract cost function, finite_diff, learn, and train function
+-- make some functions take in a table
+
 local M = {}
 
 -- Matrix
@@ -175,7 +183,29 @@ function M.nn.forward(header)
       end
    end
 
-   return nn["a" .. #func][1][1]
+   return nn["a" .. #func]
+end
+
+function M.mse_cost(header, td, stride)
+   local output_count = #M.nn.forward(header)[1]
+   local nn = header["nn"]
+   local result = 0.0
+
+   for i = 1, #td do
+      for j = 1, stride do
+         nn["a0"][1][j] = td[i][j]
+      end
+
+      local y = {}
+      local d = {}
+
+      for j = 1, output_count do
+         y[j] = M.nn.forward(header)[1][j]
+         d[j] = y[j] - td[i][stride+j]
+         result = result + d[j]*d[j]
+      end
+   end
+   return result / output_count / #td
 end
 
 return M
