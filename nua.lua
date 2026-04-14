@@ -13,8 +13,9 @@ local M = {}
 -- 1. Matrix
 -- 2. Matrix Macros
 -- 3. Activation Functions
--- 4. Neural Network
--- 5. Training
+-- 4. Dataset Normalisation
+-- 5. Neural Network
+-- 6. Training
 
 
 
@@ -120,9 +121,21 @@ function M.relu(mat)
    end
 end
 
+function M.tanh(mat)
+   for i = 1, #mat do
+      for j = 1, #mat[1] do
+         mat[i][j] = (math.exp(mat[i][j]) - math.exp(-mat[i][j])) / (math.exp(mat[i][j]) + math.exp(-mat[i][j]))
+      end
+   end
+end
 
 
--- 4. Neural Network
+
+-- 4. Dataset Normalisation
+
+
+
+-- 5. Neural Network
 M.nn = {}
 
 function M.nn.init(layers)
@@ -197,7 +210,7 @@ end
 
 
 
--- 5. Training
+-- 6. Training
 
 function M.mse_cost(header, train_dataset, stride)
    local output_count = #M.nn.forward(header)[1]
@@ -221,8 +234,8 @@ function M.mse_cost(header, train_dataset, stride)
    return result / output_count / #train_dataset
 end
 
-function M.finite_diff(header, eps, td, stride)
-   local c = M.mse_cost(header, td, stride)
+function M.finite_diff(header, eps, train_dataset, stride)
+   local c = M.mse_cost(header, train_dataset, stride)
    local nn = header["nn"]
    local Gradients = M.nn.init(header["arr_layers"])
 
@@ -232,7 +245,7 @@ function M.finite_diff(header, eps, td, stride)
             local temp = v[i][j]
 
             v[i][j] = v[i][j] + eps
-            Gradients[k][i][j] = (M.mse_cost(header, td, stride) - c) / eps
+            Gradients[k][i][j] = (M.mse_cost(header, train_dataset, stride) - c) / eps
             v[i][j] = temp
          end
       end
