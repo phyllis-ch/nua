@@ -10,7 +10,7 @@ This project was created for me to learn about neural networks and Lua.
 Suggestions on code improvements are welcome.
 
 ## Requirements
-- >=lua5.4
+- \>=lua5.4
 
 > lua5.3 and below is untested. Contributions are welcome.
 
