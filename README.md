@@ -19,3 +19,4 @@ Suggestions on code improvements are welcome.
 local nua = require("nua")
 
 ...
+```
